@@ -1,5 +1,26 @@
 const { prompt } = require("inquirer");
-const mySql = require('mysql2');
+const mysql = require('mysql2');
+const cTable = require('console.table');
+
+
+// Connect to database - creating a connection to the database.
+const db = mysql.createConnection(
+    {
+        host: 'localhost',
+        // Your MySQL username,
+        user: 'root',
+        // Your MySQL password
+        password: 'Mateo123',
+        database: 'Employee_Tracker'
+    },
+    console.log('Connected to the Employee_Tracker database.')
+);
+db.connect(function(err) {
+    if (err) throw err;
+    console.log("Connected!");
+  });
+
+
 
 
 const questions = async () => {
@@ -16,28 +37,36 @@ const questions = async () => {
         ])
 
 
-    // if (answers.role === 'View all departments') {
-    //     const viewAllDepartments = await 
+    if (answers.role === 'View all departments') {
+        const viewAllDepartments = await 
 
-    //         prompt([
+            prompt([
 
-    //             {
-    //                 type: 'input',
-    //                 name: 'Name',
-    //                 message: 'What is the name of your department (Required)',
-    //                 validate: enterName => {
-    //                     if (enterName) {
-    //                         return true;
-    //                     } else {
-    //                         console.log('You need to enter a department name!');
-    //                         return false;
-    //                     }
-    //                 }
-    //             },
+                {
+                    // console.table([
+                    // const db = mysql.createConnection(
+                    //     {
+                    //         host: 'localhost',
+                    //         // Your MySQL username,
+                    //         user: 'root',
+                    //         // Your MySQL password
+                    //         password: 'Mateo123',
+                    //         database: 'Employee_Tracker'
+                    //     },
+                    //     console.log('Connected to the Employee_Tracker database.')
+                    // )
+                    // db.connect(function(err) {
+                    //     if (err) throw err;
+                    //     console.log("Connected!");
+                    //   });
 
-    //         ])
+                    // ]);
+                   
+                },
 
-    // }
+            ])
+            questions();
+    }
 
 
     // if (answers.role === 'view all roles') {
@@ -111,6 +140,7 @@ const questions = async () => {
                 
             ])
 console.log("Added Service To Database")
+questions();
     }
 
 
@@ -122,8 +152,8 @@ console.log("Added Service To Database")
 
                 {
                     type: 'input',
-                    name: 'role',
-                    message: 'What is the name of the role (Required)',
+                    name: 'title',
+                    message: 'What is the title of the role (Required)',
                     validate: enterName => {
                         if (enterName) {
                             return true;
@@ -164,6 +194,7 @@ console.log("Added Service To Database")
 
             ])
             console.log(`Added ${prompt.role} To the Database`)
+            questions();
     }
 
 
@@ -231,6 +262,7 @@ console.log("Added Service To Database")
 
             ])
             console.log(`Added ${prompt.firstName , prompt.lastName } To the Database`)
+            questions();
     }
 
 
