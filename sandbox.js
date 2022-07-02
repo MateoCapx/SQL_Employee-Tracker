@@ -1,10 +1,10 @@
 const { prompt } = require("inquirer");
 const mysql = require('mysql2');
 const cTable = require('console.table');
-
+// const queryFunctions = require('./queryFunctions');
 
 // Connect to database - creating a connection to the database.
-const db = mysql.createConnection(
+    const db = mysql.createConnection(
     {
         host: 'localhost',
         // Your MySQL username,
@@ -15,6 +15,7 @@ const db = mysql.createConnection(
     },
     console.log('Connected to the Employee_Tracker database.')
 );
+
 db.connect(function(err) {
     if (err) throw err;
     console.log("Connected!");
@@ -23,6 +24,35 @@ db.connect(function(err) {
 
 
 
+  
+// Function that queries the department table and creates a table
+function viewDepartment(){
+    db.query(`SELECT * FROM Employee_Tracker.department;`, (err,res) =>{
+        console.table(res)
+    })
+
+}
+
+// Function that queries the department table and creates a table
+function viewRole(){
+    db.query(`SELECT * FROM Employee_Tracker.role;`, (err,res) =>{
+        console.table(res)
+    })
+
+}
+
+// Function that queries the department table and creates a table
+function viewEmployee(){
+    db.query(`SELECT * FROM Employee_Tracker.employee;`, (err,res) =>{
+        console.table(res)
+    })
+
+}
+
+
+
+
+//Prompted questions that the user will answer.
 const questions = async () => {
     const answers = await 
         prompt([
@@ -31,92 +61,39 @@ const questions = async () => {
                 type: 'list',
                 name: 'role',
                 message: 'What Would You Like to Do?',
-                choices: ['View all departments', 'View all roles', , 'View all employees', , 'Add a department', , 'Add a role', , 'Add an employee', 'update an employee role',]
+                choices: ['View all departments', 'View all roles', 'View all employees',  'Add a department',  'Add a role',  'Add an employee', 'update an employee role',]
             }
 
         ])
 
 
+// IF USER SELECTS VIEW ALL DEPARTEMENTS - QUERY DATABASE TO DISPLAY DEPARTMENTS
     if (answers.role === 'View all departments') {
-        const viewAllDepartments = await 
+     viewDepartment();
+      questions();
+}
 
-            prompt([
-
-                {
-                    // console.table([
-                    // const db = mysql.createConnection(
-                    //     {
-                    //         host: 'localhost',
-                    //         // Your MySQL username,
-                    //         user: 'root',
-                    //         // Your MySQL password
-                    //         password: 'Mateo123',
-                    //         database: 'Employee_Tracker'
-                    //     },
-                    //     console.log('Connected to the Employee_Tracker database.')
-                    // )
-                    // db.connect(function(err) {
-                    //     if (err) throw err;
-                    //     console.log("Connected!");
-                    //   });
-
-                    // ]);
-                   
-                },
-
-            ])
-            questions();
+// IF USER SELECTS VIEW ALL ROLES - QUERY DATABES TO DISPLAY ROLES 
+    if (answers.role === 'View all roles') {
+         viewRole();
+        questions();
     }
 
+// IF USER SELECTS VIEW ALL EMPLOYEES - QUERY DATABES TO DISPLAY EMPLOYEES 
+    if (answers.role === 'View all employees') {
+        viewEmployee();
+        questions();
 
-    // if (answers.role === 'view all roles') {
-    //     const viewAllDepartments = await 
+    }
 
-    //         prompt([
-
-    //             {
-    //                 type: 'input',
-    //                 name: 'Name',
-    //                 message: 'What is the name of your department (Required)',
-    //                 validate: enterName => {
-    //                     if (enterName) {
-    //                         return true;
-    //                     } else {
-    //                         console.log('You need to enter a department name!');
-    //                         return false;
-    //                     }
-    //                 }
-    //             },
-
-    //         ])
-
-    // }
-
-
-    // if (answers.role === 'view all employees') {
-    //     const viewAllDepartments = await 
-
-    //         prompt([
-
-    //             {
-    //                 type: 'input',
-    //                 name: 'Name',
-    //                 message: 'What is the name of your department (Required)',
-    //                 validate: enterName => {
-    //                     if (enterName) {
-    //                         return true;
-    //                     } else {
-    //                         console.log('You need to enter a department name!');
-    //                         return false;
-    //                     }
-    //                 }
-    //             },
-
-    //         ])
-
-    // }
-
-
+    
+    function addDepartment(){
+        db.query(`SELECT * FROM Employee_Tracker.employee;`, (err,res) =>{
+            console.table(res)
+        })
+    
+    }
+ 
 
     if (answers.role === 'Add a department') {
         const viewAllDepartments = await 
@@ -139,6 +116,7 @@ const questions = async () => {
 
                 
             ])
+
 console.log("Added Service To Database")
 questions();
     }

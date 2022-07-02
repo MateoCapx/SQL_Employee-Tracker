@@ -1,4 +1,9 @@
 DROP TABLE IF EXISTS department;
+DROP TABLE IF EXISTS role;
+
+-- CREATE DATABASE Employee_Tracker
+
+-- USE Employee_Tracker
 
 create table department (
     id INT PRIMARY KEY AUTO_INCREMENT,
@@ -12,6 +17,10 @@ create table department (
      department_id INT
 
  );
+
+
+SELECT title, salary, department_id
+FROM role;
 
  CREATE TABLE employee (
     id INT PRIMARY KEY AUTO_INCREMENT,
