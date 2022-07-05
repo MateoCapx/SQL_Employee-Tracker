@@ -10,4 +10,3 @@ VALUES
 INSERT INTO role (title, salary, department_id)
 VALUES
 ('Software Developer',120000,1);
-

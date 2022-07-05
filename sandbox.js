@@ -93,7 +93,6 @@ const questions = async () => {
         const viewAllDepartments = await 
 
             prompt([
-
                 {
                     type: 'input',
                     name: 'department',
@@ -110,7 +109,7 @@ const questions = async () => {
 
                 
             ]).then(function(res,err){
-                db.query(`"INSERT INTO departments SET ?";`)
+                db.query(` "INSERT INTO department SET ? ", res.department; `)
                     console.table(res)
                     if(err){
                         console.log(err)
