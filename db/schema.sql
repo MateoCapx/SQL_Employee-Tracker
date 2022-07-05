@@ -4,9 +4,10 @@ DROP TABLE IF EXISTS role;
 
 create table department (
     id INT PRIMARY KEY AUTO_INCREMENT,
-     name VARCHAR(30) NOT NULL
+     name VARCHAR(30) NOT NULL UNIQUE
 );
  
+
  CREATE TABLE role (
      id INT PRIMARY KEY AUTO_INCREMENT,
      title VARCHAR(30) NOT NULL,
@@ -16,8 +17,7 @@ create table department (
  );
 
 
-SELECT title, salary, department_id
-FROM role;
+
 
  CREATE TABLE employee (
     id INT PRIMARY KEY AUTO_INCREMENT,

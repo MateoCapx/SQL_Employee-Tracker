@@ -87,13 +87,7 @@ const questions = async () => {
     }
 
 
-    function addDepartment(){
-        db.query(`INSERT INTO department(name) VALUES (IT);`, (err,res) =>{
-            console.table(res)
-        })
-    
-    }
- 
+
 
     if (answers.role === 'Add a department') {
         const viewAllDepartments = await 
@@ -115,8 +109,17 @@ const questions = async () => {
                 },
 
                 
-            ])
-            addDepartment();
+            ]).then(function(res,err){
+                db.query(`INSERT INTO department(name) VALUES ?;`)
+                    console.table(res)
+                    if(err){
+                        console.log(err)
+                    }
+            })
+            
+        
+
+          
             questions();
             console.log("Added Service To Database")
 
