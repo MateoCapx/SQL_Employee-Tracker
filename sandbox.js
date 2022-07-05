@@ -110,7 +110,7 @@ const questions = async () => {
 
                 
             ]).then(function(res,err){
-                db.query(`INSERT INTO department(name) VALUES ?;`)
+                db.query(`"INSERT INTO departments SET ?";`)
                     console.table(res)
                     if(err){
                         console.log(err)
