@@ -86,9 +86,9 @@ const questions = async () => {
 
     }
 
-    
+
     function addDepartment(){
-        db.query(`SELECT * FROM Employee_Tracker.employee;`, (err,res) =>{
+        db.query(`INSERT INTO department(name) VALUES (IT);`, (err,res) =>{
             console.table(res)
         })
     
@@ -116,9 +116,10 @@ const questions = async () => {
 
                 
             ])
+            addDepartment();
+            questions();
+            console.log("Added Service To Database")
 
-console.log("Added Service To Database")
-questions();
     }
 
 
