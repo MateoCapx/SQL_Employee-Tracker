@@ -4,7 +4,7 @@ const cTable = require('console.table');
 // const queryFunctions = require('./queryFunctions');
 
 // Connect to database - creating a connection to the database.
-    const db = mysql.createConnection(
+const db = mysql.createConnection(
     {
         host: 'localhost',
         // Your MySQL username,
@@ -16,34 +16,34 @@ const cTable = require('console.table');
     console.log('Connected to the Employee_Tracker database.')
 );
 
-db.connect(function(err) {
+db.connect(function (err) {
     if (err) throw err;
     console.log("Connected!");
-  });
+});
 
 
 
 
-  
+
 // Function that queries the department table and creates a table
-function viewDepartment(){
-    db.query(`SELECT * FROM Employee_Tracker.department;`, (err,res) =>{
+function viewDepartment() {
+    db.query(`SELECT * FROM Employee_Tracker.department;`, (err, res) => {
         console.table(res)
     })
 
 }
 
 // Function that queries the department table and creates a table
-function viewRole(){
-    db.query(`SELECT * FROM Employee_Tracker.role;`, (err,res) =>{
+function viewRole() {
+    db.query(`SELECT * FROM Employee_Tracker.role;`, (err, res) => {
         console.table(res)
     })
 
 }
 
 // Function that queries the department table and creates a table
-function viewEmployee(){
-    db.query(`SELECT * FROM Employee_Tracker.employee;`, (err,res) =>{
+function viewEmployee() {
+    db.query(`SELECT * FROM Employee_Tracker.employee;`, (err, res) => {
         console.table(res)
     })
 
@@ -54,32 +54,32 @@ function viewEmployee(){
 
 //Prompted questions that the user will answer.
 const questions = async () => {
-    const answers = await 
+    const answers = await
         prompt([
 
             {
                 type: 'list',
                 name: 'role',
                 message: 'What Would You Like to Do?',
-                choices: ['View all departments', 'View all roles', 'View all employees',  'Add a department',  'Add a role',  'Add an employee', 'update an employee role',]
+                choices: ['View all departments', 'View all roles', 'View all employees', 'Add a department', 'Add a role', 'Add an employee', 'update an employee role',]
             }
 
         ])
 
 
-// IF USER SELECTS VIEW ALL DEPARTEMENTS - QUERY DATABASE TO DISPLAY DEPARTMENTS
+    // IF USER SELECTS VIEW ALL DEPARTEMENTS - QUERY DATABASE TO DISPLAY DEPARTMENTS
     if (answers.role === 'View all departments') {
-     viewDepartment();
-      questions();
-}
-
-// IF USER SELECTS VIEW ALL ROLES - QUERY DATABES TO DISPLAY ROLES 
-    if (answers.role === 'View all roles') {
-         viewRole();
+        viewDepartment();
         questions();
     }
 
-// IF USER SELECTS VIEW ALL EMPLOYEES - QUERY DATABES TO DISPLAY EMPLOYEES 
+    // IF USER SELECTS VIEW ALL ROLES - QUERY DATABES TO DISPLAY ROLES 
+    if (answers.role === 'View all roles') {
+        viewRole();
+        questions();
+    }
+
+    // IF USER SELECTS VIEW ALL EMPLOYEES - QUERY DATABES TO DISPLAY EMPLOYEES 
     if (answers.role === 'View all employees') {
         viewEmployee();
         questions();
@@ -90,7 +90,7 @@ const questions = async () => {
 
 
     if (answers.role === 'Add a department') {
-        const viewAllDepartments = await 
+        const viewAllDepartments = await
 
             prompt([
                 {
@@ -107,27 +107,27 @@ const questions = async () => {
                     }
                 },
 
-                
-            ]).then(function(res,err){
-                 db.query( "INSERT INTO department (name) VALUES (?)", res.department)
-                    console.table(res)
-                    if (res){
-                        console.log( `Added ${res.department} To the Database`) 
-                    }
-                    else(err)
-                        console.log(err)
-                    
+
+            ]).then(function (res, err) {
+                db.query("INSERT INTO department (name) VALUES (?)", res.department)
+                console.table(res)
+                if (res) {
+                    console.log(`Added ${res.department} To the Database`)
+                }
+                else (err)
+                console.log(err)
+
             })
-           
-            questions();
-           
+
+        questions();
+
 
     }
 
 
 
     if (answers.role === 'Add a role') {
-        const viewAllDepartments = await 
+        const viewAllDepartments = await
 
             prompt([
 
@@ -173,23 +173,25 @@ const questions = async () => {
                     }
                 }
 
-            ]).then(function(res,err){
-                db.query( "INSERT INTO role (title, salary, department_id) VALUES (?)", res.role)
-                   console.table(res)
-                   if (res){
-                    console.log("Role Added To the Database")
-                   }
-                   else(err)
-                       console.log(err)
-                   
-           })
-            questions();
+            ]).then(function (res) {
+                console.table(res)
+                db.query("INSERT INTO role (title, salary, department_id) VALUES (?, ?, ?)", [res.title, res.salary, res.department_id],
+                    (error, result) => {
+                        if (result) {
+                            console.log("Role Added To the Database")
+                        } else if (error) {
+                            console.log(error)
+                        }
+                    }
+                )
+            })
+        questions();
     }
 
 
 
     if (answers.role === 'Add an employee') {
-        const viewAllDepartments = await 
+        const viewAllDepartments = await
 
             prompt([
 
@@ -249,15 +251,28 @@ const questions = async () => {
                     }
                 },
 
-            ])
-            console.log(`Added ${prompt.firstName , prompt.lastName } To the Database`)
-            questions();
+            ]).then(function (res) {
+                console.table(res)
+                db.query("INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)", [res.firstName, res.lastName, res.employeeRole, res.employeeManager],
+                    (error, result) => {
+                        if (result) {
+                   console.log(`Added ${res.firstName,res.lastName} To the Database`)           
+                        } else if (error) {
+                            console.log(error)
+                        }
+                    }
+                )
+            })
+     
+        questions();
     }
 
 
 
     if (answers.role === 'update an employee role') {
-        const viewAllDepartments = await 
+        const viewAllDepartments = await
+
+ 
 
             prompt([
 
@@ -275,10 +290,24 @@ const questions = async () => {
                     }
                 },
 
-            ])
+            ]).then(function (res) {
+                console.table(res)
+                db.query("INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)", [res.firstName, res.lastName, res.employeeRole, res.employeeManager],
+                    (error, result) => {
+                        if (result) {
+                   console.log(`Added ${res.firstName,res.lastName} To the Database`)           
+                        } else if (error) {
+                            console.log(error)
+                        }
+                    }
+                )
+            })
 
     }
-  
-   
-} 
+// UPDATE role
+// SET title = '? ', salary= '?';
+
+
+}
 questions();
+
