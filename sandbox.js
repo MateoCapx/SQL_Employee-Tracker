@@ -109,18 +109,18 @@ const questions = async () => {
 
                 
             ]).then(function(res,err){
-                db.query(` "INSERT INTO department SET ? ", res.department; `)
+                 db.query( "INSERT INTO department (name) VALUES (?)", res.department)
                     console.table(res)
-                    if(err){
-                        console.log(err)
+                    if (res){
+                        console.log( `Added ${res.department} To the Database`) 
                     }
+                    else(err)
+                        console.log(err)
+                    
             })
-            
-        
-
-          
+           
             questions();
-            console.log("Added Service To Database")
+           
 
     }
 
@@ -147,7 +147,7 @@ const questions = async () => {
 
                 {
                     type: 'input',
-                    name: 'roleSalary',
+                    name: 'salary',
                     message: 'What is the salary of the role (Required)',
                     validate: enterName => {
                         if (enterName) {
@@ -161,7 +161,7 @@ const questions = async () => {
 
                 {
                     type: 'input',
-                    name: 'roleDepartment',
+                    name: 'department_id',
                     message: 'Which department does the role belong to?  (Required)',
                     validate: enterName => {
                         if (enterName) {
@@ -173,8 +173,16 @@ const questions = async () => {
                     }
                 }
 
-            ])
-            console.log(`Added ${prompt.role} To the Database`)
+            ]).then(function(res,err){
+                db.query( "INSERT INTO role (title, salary, department_id) VALUES (?)", res.role)
+                   console.table(res)
+                   if (res){
+                    console.log("Role Added To the Database")
+                   }
+                   else(err)
+                       console.log(err)
+                   
+           })
             questions();
     }
 
