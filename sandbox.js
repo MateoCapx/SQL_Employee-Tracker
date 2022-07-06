@@ -50,6 +50,37 @@ function viewEmployee() {
 }
 
 
+// This function is to dynamically display the roles from the database
+async function populateDepartmentsArray(arr) {
+    let roles = await db.promise().query(`SELECT name FROM department;`)
+    roles[0].forEach(element => arr.push(element.name))
+ }
+
+  let departmentsArray = []
+
+ async function viewDepartments(){
+     populateDepartmentsArray(departmentsArray)
+     return await departmentsArray
+ }
+
+ viewDepartments();
+ 
+
+
+//This function dynamically displays employees role
+ async function populateRoleArray(array) {
+    let role = await db.promise().query(`SELECT title, salary FROM role;`)
+    role[0].forEach(element => array.push(element.title))
+ }
+
+  let roleArray = []
+
+ async function viewRole(){
+    populateRoleArray(roleArray)
+     return await roleArray
+ }
+
+ viewRole();
 
 
 //Prompted questions that the user will answer.
@@ -126,7 +157,9 @@ const questions = async () => {
 
 
 
-    if (answers.role === 'Add a role') {
+    if (answers.role === 'Add a role') 
+    
+    {
         const viewAllDepartments = await
 
             prompt([
@@ -160,17 +193,11 @@ const questions = async () => {
                 },
 
                 {
-                    type: 'input',
+                    type: 'list',
                     name: 'department_id',
                     message: 'Which department does the role belong to?  (Required)',
-                    validate: enterName => {
-                        if (enterName) {
-                            return true;
-                        } else {
-                            console.log('You need to enter a department!');
-                            return false;
-                        }
-                    }
+                    choices: departmentsArray
+
                 }
 
             ]).then(function (res) {
@@ -224,31 +251,11 @@ const questions = async () => {
                 },
 
                 {
-                    type: 'input',
+                    type: 'list',
                     name: 'employeeRole',
                     message: 'What is the employees role? (Required)',
-                    validate: enterName => {
-                        if (enterName) {
-                            return true;
-                        } else {
-                            console.log('You need to enter employee role!');
-                            return false;
-                        }
-                    }
-                },
-
-                {
-                    type: 'input',
-                    name: 'employeeManager',
-                    message: 'Who is the emplyoees manager? (Required)',
-                    validate: enterName => {
-                        if (enterName) {
-                            return true;
-                        } else {
-                            console.log('You need to enter employee manager!');
-                            return false;
-                        }
-                    }
+                    choices: roleArray
+                  
                 },
 
             ]).then(function (res) {
@@ -306,7 +313,6 @@ const questions = async () => {
     }
 // UPDATE role
 // SET title = '? ', salary= '?';
-
 
 }
 questions();

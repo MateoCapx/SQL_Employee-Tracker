@@ -1,5 +1,6 @@
 DROP TABLE IF EXISTS department;
 DROP TABLE IF EXISTS role;
+DROP TABLE IF EXISTS employee;
 
 
 create table department (
@@ -12,9 +13,8 @@ create table department (
      id INT PRIMARY KEY AUTO_INCREMENT,
      title VARCHAR(30) NOT NULL,
      salary INT,
-     department_id INT,
-     PRIMARY KEY (id),
-     FOREIGN KEY (department_id) REFERENCES department(id)
+     department_id VARCHAR(30) NOT NULL
+    --  FOREIGN KEY (department_id) REFERENCES department(id)
 
  );
 
@@ -24,9 +24,9 @@ create table department (
     id INT PRIMARY KEY AUTO_INCREMENT,
      first_name VARCHAR(30) NOT NULL,
      last_name VARCHAR(30) NOT NULL,    
-     role_id INT,   
+     role_id VARCHAR(30),   
      manager_id INT NULL,
-     FOREIGN KEY(manager_id) REFERENCES employees (id)
+     FOREIGN KEY(manager_id) REFERENCES employee (id)
  );
 
 
