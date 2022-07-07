@@ -87,8 +87,8 @@ viewRole();
 
 //This function dynamically displays employees 
 async function populateEmployeeArray(array) {
-    let employee = await db.promise().query(`SELECT first_name FROM employee;`)
-    employee[0].forEach(element => array.push(element.first_name))
+    let employee = await db.promise().query(`SELECT first_name, last_name FROM employee;`)
+    employee[0].forEach(element => array.push(element.first_name));
 }
 
 let employeeArray = []
@@ -98,7 +98,7 @@ async function viewEmployee() {
     return await employeeArray
 }
 
-populateEmployeeArray();
+viewEmployee();
 
 
 
@@ -122,19 +122,22 @@ const questions = async () => {
     // IF USER SELECTS VIEW ALL DEPARTEMENTS - QUERY DATABASE TO DISPLAY DEPARTMENTS
     if (answers.role === 'View all departments') {
         viewDepartment();
-        questions();
+       
+        
     }
 
     // IF USER SELECTS VIEW ALL ROLES - QUERY DATABES TO DISPLAY ROLES 
     if (answers.role === 'View all roles') {
         viewRole();
-        questions();
+       
+        
     }
 
     // IF USER SELECTS VIEW ALL EMPLOYEES - QUERY DATABES TO DISPLAY EMPLOYEES 
     if (answers.role === 'View all employees') {
         viewEmployee();
-        questions();
+       
+        
 
     }
 
@@ -171,7 +174,8 @@ const questions = async () => {
 
             })
 
-        questions();
+       
+            
 
 
     }
@@ -231,7 +235,8 @@ const questions = async () => {
                     }
                 )
             })
-        questions();
+       
+            
     }
 
 
@@ -307,14 +312,24 @@ const questions = async () => {
                     name: 'employeeUpdate',
                     message: 'Which employee would you like to update? (Required)',
                     choices: employeeArray
-                },
+                }, 
+                
+                // {
+                //     type: 'list',
+                //     name: 'department_id',
+                //     message: 'What role would you like to change the employee too?  (Required)',
+                //     choices: departmentsArray
+
+                // }
+                
+            
 
             ]).then(function (res) {
                 console.table(res)
-                db.query("INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)", [res.firstName, res.lastName, res.employeeRole, res.employeeManager],
+                db.query("UPDATE role SET title = '?' ", [res.firstName, res.lastName, res.employeeRole, res.employeeManager],
                     (error, result) => {
                         if (result) {
-                            console.log(`Added ${res.firstName, res.lastName} To the Database`)
+                            console.log(`Employee Role updated`)
                         } else if (error) {
                             console.log(error)
                         }
@@ -323,9 +338,8 @@ const questions = async () => {
             })
 
     }
-    // UPDATE role
-    // SET title = '? ', salary= '?';
-
+ 
+    questions();
 }
 questions();
 

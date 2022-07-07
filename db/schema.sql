@@ -14,8 +14,6 @@ create table department (
      title VARCHAR(30) NOT NULL,
      salary INT,
      department_id VARCHAR(30) NOT NULL
-    --  FOREIGN KEY (department_id) REFERENCES department(id)
-
  );
 
 
