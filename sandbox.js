@@ -1,6 +1,6 @@
 const { prompt } = require("inquirer");
 const mysql = require('mysql2');
-const cTable = require('console.table');
+// const cTable = require('console.table');
 // const queryFunctions = require('./queryFunctions');
 
 // Connect to database - creating a connection to the database.
@@ -54,33 +54,54 @@ function viewEmployee() {
 async function populateDepartmentsArray(arr) {
     let roles = await db.promise().query(`SELECT name FROM department;`)
     roles[0].forEach(element => arr.push(element.name))
- }
+}
 
-  let departmentsArray = []
+let departmentsArray = []
 
- async function viewDepartments(){
-     populateDepartmentsArray(departmentsArray)
-     return await departmentsArray
- }
+async function viewDepartments() {
+    populateDepartmentsArray(departmentsArray)
+    return await departmentsArray
+}
 
- viewDepartments();
- 
+viewDepartments();
+
 
 
 //This function dynamically displays employees role
- async function populateRoleArray(array) {
+async function populateRoleArray(array) {
     let role = await db.promise().query(`SELECT title, salary FROM role;`)
     role[0].forEach(element => array.push(element.title))
- }
+}
 
-  let roleArray = []
+let roleArray = []
 
- async function viewRole(){
+async function viewRole() {
     populateRoleArray(roleArray)
-     return await roleArray
- }
+    return await roleArray
+}
 
- viewRole();
+viewRole();
+
+
+
+
+//This function dynamically displays employees 
+async function populateEmployeeArray(array) {
+    let employee = await db.promise().query(`SELECT first_name FROM employee;`)
+    employee[0].forEach(element => array.push(element.first_name))
+}
+
+let employeeArray = []
+
+async function viewEmployee() {
+    populateEmployeeArray(employeeArray)
+    return await employeeArray
+}
+
+populateEmployeeArray();
+
+
+
 
 
 //Prompted questions that the user will answer.
@@ -157,9 +178,7 @@ const questions = async () => {
 
 
 
-    if (answers.role === 'Add a role') 
-    
-    {
+    if (answers.role === 'Add a role') {
         const viewAllDepartments = await
 
             prompt([
@@ -255,7 +274,7 @@ const questions = async () => {
                     name: 'employeeRole',
                     message: 'What is the employees role? (Required)',
                     choices: roleArray
-                  
+
                 },
 
             ]).then(function (res) {
@@ -263,14 +282,14 @@ const questions = async () => {
                 db.query("INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)", [res.firstName, res.lastName, res.employeeRole, res.employeeManager],
                     (error, result) => {
                         if (result) {
-                   console.log(`Added ${res.firstName,res.lastName} To the Database`)           
+                            console.log(`Added ${res.firstName, res.lastName} To the Database`)
                         } else if (error) {
                             console.log(error)
                         }
                     }
                 )
             })
-     
+
         questions();
     }
 
@@ -279,22 +298,15 @@ const questions = async () => {
     if (answers.role === 'update an employee role') {
         const viewAllDepartments = await
 
- 
+
 
             prompt([
 
                 {
-                    type: 'input',
+                    type: 'list',
                     name: 'employeeUpdate',
-                    message: 'Which employees role would you like to update? (Required)',
-                    validate: enterName => {
-                        if (enterName) {
-                            return true;
-                        } else {
-                            console.log('You need to enter an employee you would like to update!');
-                            return false;
-                        }
-                    }
+                    message: 'Which employee would you like to update? (Required)',
+                    choices: employeeArray
                 },
 
             ]).then(function (res) {
@@ -302,7 +314,7 @@ const questions = async () => {
                 db.query("INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)", [res.firstName, res.lastName, res.employeeRole, res.employeeManager],
                     (error, result) => {
                         if (result) {
-                   console.log(`Added ${res.firstName,res.lastName} To the Database`)           
+                            console.log(`Added ${res.firstName, res.lastName} To the Database`)
                         } else if (error) {
                             console.log(error)
                         }
@@ -311,8 +323,8 @@ const questions = async () => {
             })
 
     }
-// UPDATE role
-// SET title = '? ', salary= '?';
+    // UPDATE role
+    // SET title = '? ', salary= '?';
 
 }
 questions();
