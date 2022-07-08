@@ -36,12 +36,12 @@ function viewDepartment() {
 // Function that queries the department table and creates a table
 function viewRole() {
     db.query(`SELECT *FROM  Employee_Tracker.role;`, (err, res) => {
-            if(err){
-                console.log(err)
-                return
-            }
+        if (err) {
+            console.log(err)
+            return
+        }
         console.table(res)
-        
+
     })
 
 }
@@ -299,45 +299,55 @@ const questions = async () => {
     }
 
 
-    let employeetable = employeeArray ;
+    // let employeetable = employeeArray;
 
-    if (answers.role === 'update an employee role') {
-        const viewAllDepartments = await
-
-
+    if (answers.role === "update an employee role") {
+        console.log(employeeArray);
+        let sql1 = `SELECT * FROM employee`;
+        db.query(sql1, (err, rows) => {
+            const employees = rows.map((element) => {
+                if (err) {
+                    console.log(err);
+                    return;
+                }
+                return { name: element.first_name, value: element.last_name };
+            });
 
             prompt([
-
                 {
-                    type: 'list',
-                    name: 'employeeUpdate',
-                    message: 'Which employee would you like to update? (Required)',
-                    choices: employeeArray
-
-                }, 
-               
-                {
-                    type: 'list',
-                    name: 'employeeRole',
-                    message: 'What is the employees role? (Required)',
-                    choices: rolesArray
-
+                    type: "list",
+                    name: "employees",
+                    message: "which employee?",
+                    choices: employees,
                 },
-                
-            
 
-            ]).then(function (res) {
-                let updateEmployee = map(employeeArray)
-                
-                console.table(employeeArray)
-               
+            ]).then(inputdata => {
+                db.query('SELECT * FROM role', (err, res) => {
+                    const roles = res.map((role) => {
+                      console.log(role)
+      
+                        return {
+                            name: role,
+                            value: role
+                        }
+                        
+                    });
+                })
             })
 
+
+            
+        }); 
     }
- 
-   
+    
 }
 questions();
+
+
+
+
+
+
 
 // db.query("UPDATE role SET title = '?' ", [res.firstName, res.lastName, res.employeeRole, res.employeeManager],
 // (error, result) => {
@@ -348,3 +358,4 @@ questions();
 //     }
 // }
 // )
+
