@@ -3,6 +3,7 @@ DROP TABLE IF EXISTS role;
 DROP TABLE IF EXISTS employee;
 
 
+
 create table department (
     id INT PRIMARY KEY AUTO_INCREMENT,
      name VARCHAR(30) NOT NULL UNIQUE

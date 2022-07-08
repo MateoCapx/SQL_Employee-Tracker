@@ -16,10 +16,10 @@ const db = mysql.createConnection(
     console.log('Connected to the Employee_Tracker database.')
 );
 
-db.connect(function (err) {
-    if (err) throw err;
-    console.log("Connected!");
-});
+// db.connect(function (err) {
+//     if (err) throw err;
+//     console.log("Connected!");
+// });
 
 
 
@@ -27,7 +27,7 @@ db.connect(function (err) {
 
 // Function that queries the department table and creates a table
 function viewDepartment() {
-    db.query(`SELECT * FROM Employee_Tracker.department;`, (err, res) => {
+    db.query(`SELECT * FROM department;`, (err, res) => {
         console.table(res)
     })
 
@@ -35,8 +35,13 @@ function viewDepartment() {
 
 // Function that queries the department table and creates a table
 function viewRole() {
-    db.query(`SELECT * FROM Employee_Tracker.role;`, (err, res) => {
+    db.query(`SELECT *FROM  Employee_Tracker.role;`, (err, res) => {
+            if(err){
+                console.log(err)
+                return
+            }
         console.table(res)
+        
     })
 
 }
@@ -73,14 +78,14 @@ async function populateRoleArray(array) {
     role[0].forEach(element => array.push(element.title))
 }
 
-let roleArray = []
+let rolesArray = []
 
-async function viewRole() {
-    populateRoleArray(roleArray)
-    return await roleArray
+async function viewRoles() {
+    populateRoleArray(rolesArray)
+    return await rolesArray
 }
 
-viewRole();
+viewRoles();
 
 
 
@@ -93,12 +98,12 @@ async function populateEmployeeArray(array) {
 
 let employeeArray = []
 
-async function viewEmployee() {
+async function viewEmployees() {
     populateEmployeeArray(employeeArray)
     return await employeeArray
 }
 
-viewEmployee();
+viewEmployees();
 
 
 
@@ -122,22 +127,19 @@ const questions = async () => {
     // IF USER SELECTS VIEW ALL DEPARTEMENTS - QUERY DATABASE TO DISPLAY DEPARTMENTS
     if (answers.role === 'View all departments') {
         viewDepartment();
-       
-        
+        questions();
     }
 
     // IF USER SELECTS VIEW ALL ROLES - QUERY DATABES TO DISPLAY ROLES 
     if (answers.role === 'View all roles') {
         viewRole();
-       
-        
+        questions();
     }
 
     // IF USER SELECTS VIEW ALL EMPLOYEES - QUERY DATABES TO DISPLAY EMPLOYEES 
     if (answers.role === 'View all employees') {
         viewEmployee();
-       
-        
+        questions();
 
     }
 
@@ -174,8 +176,7 @@ const questions = async () => {
 
             })
 
-       
-            
+        questions();
 
 
     }
@@ -235,8 +236,7 @@ const questions = async () => {
                     }
                 )
             })
-       
-            
+        questions();
     }
 
 
@@ -278,7 +278,7 @@ const questions = async () => {
                     type: 'list',
                     name: 'employeeRole',
                     message: 'What is the employees role? (Required)',
-                    choices: roleArray
+                    choices: rolesArray
 
                 },
 
@@ -299,6 +299,7 @@ const questions = async () => {
     }
 
 
+    let employeetable = employeeArray ;
 
     if (answers.role === 'update an employee role') {
         const viewAllDepartments = await
@@ -312,34 +313,38 @@ const questions = async () => {
                     name: 'employeeUpdate',
                     message: 'Which employee would you like to update? (Required)',
                     choices: employeeArray
-                }, 
-                
-                // {
-                //     type: 'list',
-                //     name: 'department_id',
-                //     message: 'What role would you like to change the employee too?  (Required)',
-                //     choices: departmentsArray
 
-                // }
+                }, 
+               
+                {
+                    type: 'list',
+                    name: 'employeeRole',
+                    message: 'What is the employees role? (Required)',
+                    choices: rolesArray
+
+                },
                 
             
 
             ]).then(function (res) {
-                console.table(res)
-                db.query("UPDATE role SET title = '?' ", [res.firstName, res.lastName, res.employeeRole, res.employeeManager],
-                    (error, result) => {
-                        if (result) {
-                            console.log(`Employee Role updated`)
-                        } else if (error) {
-                            console.log(error)
-                        }
-                    }
-                )
+                let updateEmployee = map(employeeArray)
+                
+                console.table(employeeArray)
+               
             })
 
     }
  
-    questions();
+   
 }
 questions();
 
+// db.query("UPDATE role SET title = '?' ", [res.firstName, res.lastName, res.employeeRole, res.employeeManager],
+// (error, result) => {
+//     if (result) {
+//         console.log(`Employee Role updated`)
+//     } else if (error) {
+//         console.log(error)
+//     }
+// }
+// )
