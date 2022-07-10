@@ -299,47 +299,98 @@ const questions = async () => {
     }
 
 
-    // let employeetable = employeeArray;
+
 
     if (answers.role === "update an employee role") {
-        console.log(employeeArray);
-        let sql1 = `SELECT * FROM employee`;
-        db.query(sql1, (err, rows) => {
-            const employees = rows.map((element) => {
-                if (err) {
-                    console.log(err);
-                    return;
-                }
-                return { name: element.first_name, value: element.last_name };
-            });
 
-            prompt([
-                {
-                    type: "list",
-                    name: "employees",
-                    message: "which employee?",
-                    choices: employees,
-                },
+        db.promise().query(`SELECT id, first_name, last_name FROM employee;`)
+            .then(([rows]) => {
+                let employee = rows;
+                const eChoices = employee.map(({ id, first_name, last_name }) => ({
+                    name: `${first_name} ${last_name}`,
+                    value: id
+                }))
 
-            ]).then(inputdata => {
-                db.query('SELECT * FROM role', (err, res) => {
-                    const roles = res.map((role) => {
-                      console.log(role)
-      
-                        return {
-                            name: role,
-                            value: role
-                        }
-                        
-                    });
+                prompt([
+                    {
+                        type: "list",
+                        name: "employees",
+                        message: "which employee?",
+                        choices: eChoices,
+                    },
+
+                ]).then(res => {
+                    let employeeId = res.employees
+                    db.promise().query(`SELECT id, title FROM role;`)
+
+                        .then(([data]) => {
+                            let roles = data;
+                            const rChoices = roles.map(({ id, title }) => ({
+                                name: title,
+                                value: id
+                            }))
+                            prompt([
+                                {
+                                    type: "list",
+                                    name: "roleId",
+                                    message: "which role do you want to change too?",
+                                    choices: rChoices,
+
+                                }
+
+                            ]).then(res => db.promise().query(`UPDATE employee SET role_id =? WHERE id =? `, [employeeId, res.roleId]))
+                                .then(()=>{
+                                    questions()
+                                })
+                        })
                 })
+
+
             })
 
 
-            
-        }); 
+
+
+        // console.log(employeeArray);
+        // let sql1 = `SELECT * FROM employee`;
+        // db.query(sql1, (err, rows) => {
+        //     const employees = rows.map((element) => {
+        //         if (err) {
+        //             console.log(err);
+        //             return;
+        //         }
+
+        //         return { name: element.first_name, value: element.last_name };
+        //     });
+
+        //     prompt([
+        //         {
+        //             type: "list",
+        //             name: "employees",
+        //             message: "which employee?",
+        //             choices: employees,
+        //         },
+
+        //     ]).then(inputdata => {
+        //         console.log(inputdata)
+        //         db.query('SELECT * FROM role', (err, res) => {
+        //             const roles = res.map((role) => {
+        //             //   console.log(role)
+
+        //                 return {
+        //                     name: role,
+        //                     value: role
+        //                 }
+
+        //             });
+        //         })
+        //     })
+
+
+
+        // }); 
     }
-    
+
 }
 questions();
 
